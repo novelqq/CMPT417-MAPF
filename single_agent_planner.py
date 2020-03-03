@@ -92,8 +92,14 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
         return False
     constraints = constraint_table[next_time]
     for constraint in constraints:
-        if(constraint['loc'][0] == next_loc):
-            print("CONSTRAINED ", constraint)
+        # 1.2
+        # if(constraint['loc'][0] == next_loc):
+        #     print("CONSTRAINED ", constraint)
+        #     return True
+
+        # 1.3 
+        if(constraint['loc'][0] == curr_loc and constraint['loc'][1] == next_loc):
+            print("Constrained: ", constraint)
             return True
     
     return False
