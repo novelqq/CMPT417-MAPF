@@ -93,14 +93,16 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
     constraints = constraint_table[next_time]
     for constraint in constraints:
         # 1.2
-        # if(constraint['loc'][0] == next_loc):
-        #     print("CONSTRAINED ", constraint)
-        #     return True
+        if(len(constraint['loc']) == 1):
+            if(constraint['loc'][0] == next_loc):
+                print("Constrained vertex: ", constraint)
+                return True
 
         # 1.3 
-        if(constraint['loc'][0] == curr_loc and constraint['loc'][1] == next_loc):
-            print("Constrained: ", constraint)
-            return True
+        else:
+            if(constraint['loc'][0] == curr_loc and constraint['loc'][1] == next_loc):
+                print("Constrained edge: ", constraint)
+                return True
     
     return False
 
@@ -143,7 +145,7 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
         curr = pop_node(open_list)
         #############################
         # Task 1.4: Adjust the goal test condition to handle goal constraints
-        if curr['loc'] == goal_loc:
+        if curr['loc'] == goal_loc and not(is_constrained(curr['loc'], curr['loc'], curr['timestep']+1, constraint_table)):
             return get_path(curr)
         for dir in range(5):
             if(dir == 4):
@@ -161,7 +163,7 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
                     'parent': curr,
                     'timestep': curr['timestep'] + 1}
             if (child['loc'], child['timestep']) in closed_list:
-                existing_node = closed_list[(child['loc'])]
+                existing_node = closed_list[(child['loc'], child['timestep'])]
                 if compare_nodes(child, existing_node):
                     closed_list[(child['loc'], child['timestep'])] = child
                     push_node(open_list, child)
