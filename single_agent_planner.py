@@ -55,6 +55,8 @@ def build_constraint_table(constraints, agent):
     #               is_constrained function.
     constraint_table = dict()
     for constraint in constraints:
+        if(constraint['agent'] != agent):
+            continue
         if(not constraint_table.get(constraint['timestep'], False)):
             constraint_table[constraint['timestep']] = []
         constraint_table[constraint['timestep']].append(constraint)
