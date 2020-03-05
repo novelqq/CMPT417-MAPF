@@ -54,38 +54,49 @@ class PrioritizedPlanningSolver(object):
         #     }
         # ]
         # 1.5 
-        constraints = [
-            {
-                'agent': 1,
-                'loc': [(1,3), (1,4)],
-                'timestep': 2
-            },
-            {
-                'agent': 1,
-                'loc': [(1,2)],
-                'timestep': 2
-            },
-            {
-                'agent': 1,
-                'loc': [(1,3)],
-                'timestep': 2
-            }
-        ]
-
+        # constraints = [
+        #     {
+        #         'agent': 1,
+        #         'loc': [(1,3), (1,4)],
+        #         'timestep': 2
+        #     },
+        #     {
+        #         'agent': 1,
+        #         'loc': [(1,2)],
+        #         'timestep': 2
+        #     },
+        #     {
+        #         'agent': 1,
+        #         'loc': [(1,3)],
+        #         'timestep': 2
+        #     }
+        # ]
+        constraints = []
         for i in range(self.num_of_agents):  # Find path for each agent
             path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
                           i, constraints)
             if path is None:
                 raise BaseException('No solutions')
-            result.append(path)
-
             ##############################
             # Task 2: Add constraints here
             #         Useful variables:
             #            * path contains the solution path of the current (i'th) agent, e.g., [(1,1),(1,2),(1,3)]
             #            * self.num_of_agents has the number of total agents
             #            * constraints: array of constraints to consider for future A* searches
-
+            for j in range(self.num_of_agents):
+                if(j == i):
+                    continue
+                timestep = 0
+                for cell in path:
+                    constraints.append(
+                        {
+                            'agent': j,
+                            'loc': [cell],
+                            'timestep': timestep
+                        }
+                    )
+                    timestep += 1
+            result.append(path)
 
             ##############################
 
