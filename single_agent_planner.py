@@ -61,7 +61,7 @@ def build_constraint_table(constraints, agent):
             constraint_table[constraint['timestep']] = []
         constraint_table[constraint['timestep']].append(constraint)
     
-    print("constraint_table: ",constraint_table)
+    # print("constraint_table: ",constraint_table)
     return constraint_table
 
 
