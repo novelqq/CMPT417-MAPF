@@ -96,8 +96,18 @@ class PrioritizedPlanningSolver(object):
                         }
                     )
                     timestep += 1
-            result.append(path)
+                    if(timestep < len(path)):
+                        constraints.append(
+                            {
+                                'agent': j,
+                                'loc': [cell, path[timestep]],
+                                'timestep': timestep
+                            }
+                        )
+                
 
+            result.append(path)
+            
             ##############################
 
         self.CPU_time = timer.time() - start_time

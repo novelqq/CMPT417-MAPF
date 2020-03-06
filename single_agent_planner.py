@@ -102,7 +102,8 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
 
         # 1.3 
         else:
-            if(constraint['loc'][0] == curr_loc and constraint['loc'][1] == next_loc):
+            if((constraint['loc'][0] == curr_loc and constraint['loc'][1] == next_loc) 
+            or (constraint['loc'][0] == next_loc and  constraint['loc'][1] == curr_loc)):
                 print("Constrained edge: ", constraint)
                 return True
     
