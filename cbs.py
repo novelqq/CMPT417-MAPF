@@ -12,15 +12,20 @@ def detect_collision(path1, path2):
     #           An edge collision occurs if the robots swap their location at the same timestep.
     #           You should use "get_location(path, t)" to get the location of a robot at time t.
     time = 0
-    while(time < min(len(path1), len(path2))):
+    while(time < max(len(path1), len(path2))):
         if(get_location(path1, time) == get_location(path2, time)):
             # vertex collision
             return {
                 'loc': [get_location(path1, time)],
                 'timestep': time
             }
+        if(time + 1 < min(len(path1), len(path2))):
+            if(get_location(path1, time) == get_location(path2, time + 1) and get_location(path1, time + 1) == get_location(path2, time)):
+                return {
+                    'loc': [get_location(path1, time), get_location(path2, time)],
+                    'timestep': time + 1
+                }
         time += 1
-    
     return None
 
 
@@ -30,8 +35,21 @@ def detect_collisions(paths):
     #           A collision can be represented as dictionary that contains the id of the two robots, the vertex or edge
     #           causing the collision, and the timestep at which the collision occurred.
     #           You should use your detect_collision function to find a collision between two robots.
-
-    pass
+    collision_list = []
+    for agent1 in range(len(paths)):
+        for agent2 in range(agent1 + 1, len(paths)):
+            first_collision = detect_collision(paths[agent1], paths[agent2])
+            if(first_collision != None):
+                collision_list.append(
+                    {
+                        'a1': agent1,
+                        'a2': agent2,
+                        'loc': first_collision['loc'],
+                        'timestep': first_collision['timestep']
+                    }
+                )
+    print("collision list: ", collision_list)
+    return collision_list
 
 
 def standard_splitting(collision):
