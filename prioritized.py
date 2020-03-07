@@ -72,6 +72,8 @@ class PrioritizedPlanningSolver(object):
         #     }
         # ]
         constraints = []
+        mymap_size = len(max(self.my_map)) * len(self.my_map)
+        print("mymap_size: ", mymap_size)
         for i in range(self.num_of_agents):  # Find path for each agent
             path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
                           i, constraints)
@@ -104,8 +106,18 @@ class PrioritizedPlanningSolver(object):
                                 'timestep': timestep
                             }
                         )
-                
+                        # goal_timestep = timestep
+                # add constraint once it reaches goal to the upper bound timestep
 
+                while(timestep <= mymap_size):
+                    constraints.append(
+                        {
+                            'agent': j,
+                            'loc': [path[-1]],
+                            'timestep': timestep
+                        }
+                    )
+                    timestep += 1
             result.append(path)
             
             ##############################

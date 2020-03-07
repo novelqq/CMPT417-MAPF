@@ -132,9 +132,7 @@ def get_earliest_goal_timestep(goal, constraint_table):
     if(max_timestep < i):
         return goal['timestep']
     for i in range(max_timestep, goal['timestep'], -1):
-        print("is is: ", i)
         if(is_constrained(goal['loc'], goal['loc'], i, constraint_table)):
-            print("returning: ", i+1)
             return i + 1
 
 def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
@@ -148,7 +146,8 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     ##############################
     # Task 1.1: Extend the A* search to search in the space-time domain
     #           rather than space domain, only.
-
+    max_timestep = len(max(my_map)) * len(my_map)
+    print("max_timestep: ", max_timestep)
     open_list = []
     closed_list = dict()
     earliest_goal_timestep = 0
@@ -162,6 +161,8 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
         #############################
         # Task 1.4: Adjust the goal test condition to handle goal constraints
         if curr['loc'] == goal_loc:
+            if(curr['timestep'] > max_timestep + 1):
+                return None
             earliest_goal_timestep = get_earliest_goal_timestep(curr, constraint_table)
             if(earliest_goal_timestep == curr['timestep']):
                 return get_path(curr)

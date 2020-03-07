@@ -11,8 +11,17 @@ def detect_collision(path1, path2):
     #           A vertex collision occurs if both robots occupy the same location at the same timestep
     #           An edge collision occurs if the robots swap their location at the same timestep.
     #           You should use "get_location(path, t)" to get the location of a robot at time t.
-
-    pass
+    time = 0
+    while(time < min(len(path1), len(path2))):
+        if(get_location(path1, time) == get_location(path2, time)):
+            # vertex collision
+            return {
+                'loc': [get_location(path1, time)],
+                'timestep': time
+            }
+        time += 1
+    
+    return None
 
 
 def detect_collisions(paths):
