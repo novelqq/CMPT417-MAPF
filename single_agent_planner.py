@@ -61,7 +61,7 @@ def build_constraint_table(constraints, agent):
             constraint_table[constraint['timestep']] = []
         constraint_table[constraint['timestep']].append(constraint)
     
-    print("agent: ", agent, "constraint_table: ",constraint_table,)
+    #print("agent: ", agent, "constraint_table: ",constraint_table,)
     return constraint_table
 
 
@@ -97,14 +97,14 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
         # 1.2
         if(len(constraint['loc']) == 1):
             if(constraint['loc'][0] == next_loc):
-                print("Constrained vertex: ", constraint)
+                #print("Constrained vertex: ", constraint)
                 return True
 
         # 1.3 
         else:
             if((constraint['loc'][0] == curr_loc and constraint['loc'][1] == next_loc) 
             or (constraint['loc'][0] == next_loc and  constraint['loc'][1] == curr_loc)):
-                print("Constrained edge: ", constraint)
+                #print("Constrained edge: ", constraint)
                 return True
     
     return False
@@ -147,7 +147,7 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     # Task 1.1: Extend the A* search to search in the space-time domain
     #           rather than space domain, only.
     max_timestep = len(max(my_map)) * len(my_map)
-    print("max_timestep: ", max_timestep)
+    #print("max_timestep: ", max_timestep)
     open_list = []
     closed_list = dict()
     earliest_goal_timestep = 0
@@ -164,7 +164,9 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
             if(curr['timestep'] > max_timestep + 1):
                 return None
             earliest_goal_timestep = get_earliest_goal_timestep(curr, constraint_table)
-            if(earliest_goal_timestep == curr['timestep']):
+            if(earliest_goal_timestep is None):
+                return get_path(curr)
+            if(earliest_goal_timestep <= curr['timestep']):
                 return get_path(curr)
         for dir in range(5):
             if(dir == 4):
@@ -172,8 +174,11 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
                 child_loc = curr['loc']
             else:
                 child_loc = move(curr['loc'], dir)
-            if my_map[child_loc[0]][child_loc[1]]:
+            if child_loc[0] < 0 or child_loc[0] >= len(my_map) or child_loc[1] == -1 or child_loc[1] >= len(max(my_map)):
                 continue
+            else:
+                if my_map[child_loc[0]][child_loc[1]]:
+                    continue
             if is_constrained(curr['loc'], child_loc, curr['timestep'] + 1, constraint_table):
                 continue
             child = {'loc': child_loc,
